@@ -1,0 +1,7 @@
+package views.cmd;
+
+import views.Cmd;
+
+public class Home extends Cmd {
+  
+}
