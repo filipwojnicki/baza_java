@@ -36,11 +36,42 @@ public class App {
             switch(menuSelection) {
                 case 1:
                     cmd.clearConsole();
-                    List<Map<String, String>> results = dataAccess.fetchAll(produkt);
+                    List<Map<String, String>> products = dataAccess.fetchAll(produkt);
 
-                    for(int i = 0; i < results.size(); i++) {
-                        System.out.println(results.get(i));
+                    for(int i = 0; i < products.size(); i++) {
+                        System.out.println(products.get(i));
                     }
+                    cmd.showView(views[indexOfMainView]);
+                    break;
+
+                case 2:
+                    cmd.clearConsole();
+                    List<Map<String, String>> clients = dataAccess.fetchAll(klient);
+
+                    for(int i = 0; i < clients.size(); i++) {
+                        System.out.println(clients.get(i));
+                    }
+                    cmd.showView(views[indexOfMainView]);
+                    break;
+
+                case 3:
+                    cmd.clearConsole();
+                    List<Map<String, String>> orders = dataAccess.fetchAll(zamowienie);
+
+                    for(int i = 0; i < orders.size(); i++) {
+                        System.out.println(orders.get(i));
+                    }
+                    cmd.showView(views[indexOfMainView]);
+                    break;
+
+                case 4:
+                    cmd.clearConsole();
+                    List<Map<String, String>> positions = dataAccess.fetchAll(pozycja);
+
+                    for(int i = 0; i < positions.size(); i++) {
+                        System.out.println(positions.get(i));
+                    }
+                    cmd.showView(views[indexOfMainView]);
                     break;
 
                 default:

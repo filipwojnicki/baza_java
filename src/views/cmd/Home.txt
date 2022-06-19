@@ -1,3 +1,5 @@
 Wybierz opcje:
 1. Pokaz produkty
-2. 
+2. Pokaz klientow
+3. Pokaz zamowienia
+4. Pokaz pozycje zamowienia
