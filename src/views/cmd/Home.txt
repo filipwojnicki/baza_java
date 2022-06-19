@@ -1,7 +1,3 @@
-package views.cmd;
-
-import views.Cmd;
-
-public class Home extends Cmd {
-  
-}
+Wybierz opcje:
+1. Pokaz produkty
+2. 

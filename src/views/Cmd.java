@@ -42,4 +42,20 @@ public class Cmd implements View {
       return null;
     }
   }
+
+  public final void clearConsole() throws IOException, InterruptedException {
+    // final String os = System.getProperty("os.name");
+
+    // System.out.println(os);
+    
+    // if (os.contains("Windows")) {
+    //   Runtime.getRuntime().exec("cls");
+    // } else {
+    //   Runtime.getRuntime().exec("clear");
+    // }
+
+    for (int i = 0; i < 50; i++) {
+      System.out.println("");
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import database.dataaccess.PostgresDataAccess;
 import views.Cmd;
@@ -15,26 +16,47 @@ public class App {
         Cmd cmd = new Cmd();
         Ceny ceny = new Ceny();
 
+        Scanner scan = new Scanner(System.in);
+
+        PostgresDataAccess dataAccess = new PostgresDataAccess(); 
+
         views = cmd.getViews();
         int indexOfMainView = Arrays.asList(views).indexOf("Home.txt");
 
-        cmd.showView(views[indexOfMainView]);
+        while(true) {
+            cmd.showView(views[indexOfMainView]);
 
-        PostgresDataAccess dataAccess = new PostgresDataAccess();  
+            int menuSelection = scan.nextInt();
 
-        List<Map<String, String>> results = dataAccess.fetchAll(ceny);
+            switch(menuSelection) {
+                case 1:
+                    cmd.clearConsole();
+                    List<Map<String, String>> results = dataAccess.fetchAll(ceny);
 
-        for(int i = 0; i < results.size(); i++) {
-            System.out.println(results.get(i));
+                    for(int i = 0; i < results.size(); i++) {
+                        System.out.println(results.get(i));
+                    }
+                    break;
+
+                default:
+                    cmd.clearConsole();
+                    cmd.showView(views[indexOfMainView]);
+                    break;
+            }
         }
 
-        Ceny cena = new Ceny();
-        cena.nazw_towaru = results.get(0).get("nazw_towaru");
-        cena.cena = results.get(0).get("cena");
-        // cena.nazw_towaru = "mleko";
-        // cena.cena = "1";
+         
 
-        System.out.println(cena.toString());
+        
+
+        // Ceny cena = new Ceny();
+        // cena.nazw_towaru = results.get(0).get("nazw_towaru");
+        // cena.cena = results.get(0).get("cena");
+        // // cena.nazw_towaru = "mleko";
+        // // cena.cena = "1";
+
+        // System.out.println(cena.toString());
+        // cmd.clearConsole();
         // dataAccess.update(cena);
         // dataAccess.remove(cena);
         // dataAccess.create(cena);
