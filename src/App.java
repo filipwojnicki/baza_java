@@ -21,63 +21,63 @@ public class App {
         Pozycja pozycja = new Pozycja();
         Zamowienie zamowienie = new Zamowienie();
 
-        Scanner scan = new Scanner(System.in);
+        try (Scanner scan = new Scanner(System.in)) {
+            PostgresDataAccess dataAccess = new PostgresDataAccess(); 
 
-        PostgresDataAccess dataAccess = new PostgresDataAccess(); 
+            views = cmd.getViews();
+            int indexOfMainView = Arrays.asList(views).indexOf("Home.txt");
 
-        views = cmd.getViews();
-        int indexOfMainView = Arrays.asList(views).indexOf("Home.txt");
+            while(true) {
+                cmd.showView(views[indexOfMainView]);
 
-        while(true) {
-            cmd.showView(views[indexOfMainView]);
+                int menuSelection = scan.nextInt();
 
-            int menuSelection = scan.nextInt();
+                switch(menuSelection) {
+                    case 1:
+                        cmd.clearConsole();
+                        List<Map<String, String>> products = dataAccess.fetchAll(produkt);
 
-            switch(menuSelection) {
-                case 1:
-                    cmd.clearConsole();
-                    List<Map<String, String>> products = dataAccess.fetchAll(produkt);
+                        for(int i = 0; i < products.size(); i++) {
+                            System.out.println(products.get(i));
+                        }
+                        cmd.showView(views[indexOfMainView]);
+                        break;
 
-                    for(int i = 0; i < products.size(); i++) {
-                        System.out.println(products.get(i));
-                    }
-                    cmd.showView(views[indexOfMainView]);
-                    break;
+                    case 2:
+                        cmd.clearConsole();
+                        List<Map<String, String>> clients = dataAccess.fetchAll(klient);
 
-                case 2:
-                    cmd.clearConsole();
-                    List<Map<String, String>> clients = dataAccess.fetchAll(klient);
+                        for(int i = 0; i < clients.size(); i++) {
+                            System.out.println(clients.get(i));
+                        }
+                        cmd.showView(views[indexOfMainView]);
+                        break;
 
-                    for(int i = 0; i < clients.size(); i++) {
-                        System.out.println(clients.get(i));
-                    }
-                    cmd.showView(views[indexOfMainView]);
-                    break;
+                    case 3:
+                        cmd.clearConsole();
+                        List<Map<String, String>> orders = dataAccess.fetchAll(zamowienie);
 
-                case 3:
-                    cmd.clearConsole();
-                    List<Map<String, String>> orders = dataAccess.fetchAll(zamowienie);
+                        for(int i = 0; i < orders.size(); i++) {
+                            System.out.println(orders.get(i));
+                        }
+                        cmd.showView(views[indexOfMainView]);
+                        break;
 
-                    for(int i = 0; i < orders.size(); i++) {
-                        System.out.println(orders.get(i));
-                    }
-                    cmd.showView(views[indexOfMainView]);
-                    break;
+                    case 4:
+                        cmd.clearConsole();
+                        List<Map<String, String>> positions = dataAccess.fetchAll(pozycja);
 
-                case 4:
-                    cmd.clearConsole();
-                    List<Map<String, String>> positions = dataAccess.fetchAll(pozycja);
+                        for(int i = 0; i < positions.size(); i++) {
+                            System.out.println(positions.get(i));
+                        }
+                        cmd.showView(views[indexOfMainView]);
+                        break;
 
-                    for(int i = 0; i < positions.size(); i++) {
-                        System.out.println(positions.get(i));
-                    }
-                    cmd.showView(views[indexOfMainView]);
-                    break;
-
-                default:
-                    cmd.clearConsole();
-                    cmd.showView(views[indexOfMainView]);
-                    break;
+                    default:
+                        cmd.clearConsole();
+                        cmd.showView(views[indexOfMainView]);
+                        break;
+                }
             }
         }
 
