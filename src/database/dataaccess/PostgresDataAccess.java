@@ -57,7 +57,7 @@ public final class PostgresDataAccess implements DataAccess {
         query += fields[i] + separator;
       }
 
-      query += "from " + schema + model.getClass().getSimpleName();
+      query += "from " + schema + getModelName(model);
 
       if(condition.length > 0) {
         query += " WHERE " + convertStrArrayToString(condition);
@@ -99,7 +99,7 @@ public final class PostgresDataAccess implements DataAccess {
       return;
     }
 
-    String query = "INSERT INTO " + schema + model.getClass().getSimpleName() + "( ";
+    String query = "INSERT INTO " + schema + getModelName(model) + "( ";
     String[] fields = model.getAttributes();
     Map<String, String> values = model.getValues();
 
@@ -152,7 +152,7 @@ public final class PostgresDataAccess implements DataAccess {
       return isUpdated;
     }
 
-    String query = "UPDATE " + schema + model.getClass().getSimpleName();
+    String query = "UPDATE " + schema + getModelName(model);
     String[] fields = model.getAttributes();
     Map<String, String> values = model.getValues();
 
@@ -203,7 +203,7 @@ public final class PostgresDataAccess implements DataAccess {
       statement = connection.createStatement();
       Map<String, String> values = model.getValues();
 
-      String query = "DELETE from " + schema + model.getClass().getSimpleName();
+      String query = "DELETE from " + schema + getModelName(model);
       query += " WHERE " + model.getIndexField() + " = '" + values.get(model.getIndexField()) + "'";
 
       logger.info(query);
@@ -245,5 +245,10 @@ public final class PostgresDataAccess implements DataAccess {
         return false;
     }
     return true;
-}
+  }
+
+  public String getModelName(Model model) {
+    String modelName = model.getClass().getSimpleName();
+    return '"' + modelName.substring(0, 1).toUpperCase() + modelName.substring(1) + '"';
+  }
 }

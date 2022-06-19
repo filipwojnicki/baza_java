@@ -6,15 +6,20 @@ import java.util.Scanner;
 import database.dataaccess.PostgresDataAccess;
 import views.Cmd;
 
-import model.Ceny;
-
+import model.Produkt;
+import model.Klient;
+import model.Pozycja;
+import model.Zamowienie;
 
 public class App {
     private static String[] views = null;
 
     public static void main(String[] args) throws Exception {
         Cmd cmd = new Cmd();
-        Ceny ceny = new Ceny();
+        Produkt produkt = new Produkt();
+        Klient klient = new Klient();
+        Pozycja pozycja = new Pozycja();
+        Zamowienie zamowienie = new Zamowienie();
 
         Scanner scan = new Scanner(System.in);
 
@@ -31,7 +36,7 @@ public class App {
             switch(menuSelection) {
                 case 1:
                     cmd.clearConsole();
-                    List<Map<String, String>> results = dataAccess.fetchAll(ceny);
+                    List<Map<String, String>> results = dataAccess.fetchAll(produkt);
 
                     for(int i = 0; i < results.size(); i++) {
                         System.out.println(results.get(i));

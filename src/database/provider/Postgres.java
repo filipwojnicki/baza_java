@@ -12,7 +12,7 @@ public final class Postgres implements Database {
   private final String url = "jdbc:postgresql://localhost:5432/sklep";
   private final String user = "postgres";
   private final String password = "admin";
-  private final String schema = "sklep.towary.";
+  private final String schema = "sklep.public.";
 
   private Connection connection = null;
   private static Logger logger = Logger.getLogger(Postgres.class.getName());
