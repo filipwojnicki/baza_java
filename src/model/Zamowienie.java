@@ -3,16 +3,17 @@ package model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Ceny extends Model {
-  public String nazw_towaru;
-  public String cena;
+public class Zamowienie extends Model {
+  public String zamowienie_id;
+  public String klient_id;
+  public String data;
 
-  public String indexField = "nazw_towaru";
-  private String[] attributes = {"nazw_towaru", "cena"};
+  public String indexField = "zamowienie_id";
+  private String[] attributes = {"zamowienie_id", "klient_id", "data"};
 
   @Override
   public String toString() {
-    return nazw_towaru + ", " + cena;
+    return zamowienie_id + "" + klient_id + ", " + data;
   }
 
   @Override
@@ -29,8 +30,9 @@ public class Ceny extends Model {
   public Map<String, String> getValues() {
     Map<String, String> values = new HashMap<String, String>();        
 
-    values.put("nazw_towaru", nazw_towaru);
-    values.put("cena", cena);
+    values.put("zamowienie_id", zamowienie_id);
+    values.put("klient_id", klient_id);
+    values.put("data", data);
 
     return values;
   }
