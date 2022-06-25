@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Klient extends Model {
-  public String klient_id;
+  public String klient_id = null;
   public String imie;
   public String nazwisko;
   public String adres;

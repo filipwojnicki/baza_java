@@ -40,7 +40,6 @@ public class App {
                         for(int i = 0; i < products.size(); i++) {
                             System.out.println(products.get(i));
                         }
-                        cmd.showView(views[indexOfMainView]);
                         break;
 
                     case 2:
@@ -50,7 +49,6 @@ public class App {
                         for(int i = 0; i < clients.size(); i++) {
                             System.out.println(clients.get(i));
                         }
-                        cmd.showView(views[indexOfMainView]);
                         break;
 
                     case 3:
@@ -60,7 +58,6 @@ public class App {
                         for(int i = 0; i < orders.size(); i++) {
                             System.out.println(orders.get(i));
                         }
-                        cmd.showView(views[indexOfMainView]);
                         break;
 
                     case 4:
@@ -70,7 +67,46 @@ public class App {
                         for(int i = 0; i < positions.size(); i++) {
                             System.out.println(positions.get(i));
                         }
-                        cmd.showView(views[indexOfMainView]);
+                        break;
+
+                    case 5:
+                        cmd.clearConsole();
+                        Klient newClient = new Klient();
+                        
+                        System.out.println("Imie:");
+                        newClient.imie = scan.next();
+
+                        System.out.println("Nazwisko:");
+                        newClient.nazwisko = scan.next();
+
+                        System.out.println("Adres:");
+                        newClient.adres = scan.next();
+
+                        System.out.println("Telefon:");
+                        newClient.telefon = scan.next();
+
+                        dataAccess.create(newClient);
+
+                        break;
+
+                    case 6:
+                        cmd.clearConsole();
+                        Produkt newProduct = new Produkt();
+                        
+                        System.out.println("Nazwa:");
+                        newProduct.nazwa = scan.next();
+
+                        System.out.println("Opis:");
+                        newProduct.opis = scan.next();
+
+                        System.out.println("Cena:");
+                        newProduct.cena = scan.next();
+
+                        System.out.println("Ilosc:");
+                        newProduct.ilosc = scan.next();
+
+                        dataAccess.create(newProduct);
+
                         break;
 
                     default:

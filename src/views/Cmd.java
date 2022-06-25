@@ -16,9 +16,9 @@ public class Cmd implements View {
   }
 
   public void showView(String view) {
-    if(view == currentView) {
-      return;
-    }
+    // if(view == currentView) {
+    //   return;
+    // }
 
     try (Stream<String> stream = Files.lines(Paths.get(this.path + "/" + view))) {
 			stream.forEach(System.out::println);

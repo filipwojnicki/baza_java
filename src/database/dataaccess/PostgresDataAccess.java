@@ -103,31 +103,43 @@ public final class PostgresDataAccess implements DataAccess {
     String[] fields = model.getAttributes();
     Map<String, String> values = model.getValues();
 
-    for(int i = 0; i < fields.length; i++) {
-      String separator = i < fields.length - 1 ? ", " : " ";
-      query += fields[i] + separator;
+    String indexValue = model.getIndexField();
+
+    values.remove(indexValue);
+
+    List<String> list = new ArrayList<String>(Arrays.asList(fields));
+    list.remove(indexValue);
+
+    String[] fieldsWithoutIndexField = list.toArray(new String[0]);
+
+    for(int i = 0; i < fieldsWithoutIndexField.length; i++) {
+      String separator = i < fieldsWithoutIndexField.length - 1 ? ", " : " ";
+      query += fieldsWithoutIndexField[i] + separator;
     }
 
     query += ") VALUES (";
 
-    for(int i = 0; i < fields.length; i++) {
-      String separator = i < fields.length - 1 ? ", " : " ";
+    for(int i = 0; i < fieldsWithoutIndexField.length; i++) {
+      String separator = i < fieldsWithoutIndexField.length - 1 ? ", " : " ";
       query += "?" + separator;
     }
 
     query += ")";
 
     logger.info(query);
+    logger.info(model.toString());
 
     try {
       ps = connection.prepareStatement(query);
 
-      for(int i = 1; i <= values.size(); i++) {
-        String value = values.get(fields[i - 1]);
+      for(int i = 0; i < fieldsWithoutIndexField.length; i++) {
+        System.out.println(i);
+        String value = values.get(fieldsWithoutIndexField[i]);
+        int preparedIndex = i + 1;
         if(isInteger(value)) {
-          ps.setInt(i, Integer.parseInt(value));
+          ps.setInt(preparedIndex, Integer.parseInt(value));
         } else {
-          ps.setString(i, value);
+          ps.setString(preparedIndex, value);
         }
       }
 
