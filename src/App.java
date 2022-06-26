@@ -357,6 +357,20 @@ public class App {
 
                         cmd.showView(views[indexOfMainView]);
                         break;
+
+                    case 15:
+                        cmd.clearConsole();
+                        scan.nextLine();
+
+                        System.out.println("id zamowienia: ");
+                        String completeOrderId = scan.nextLine();
+
+                        String[] attributes = {completeOrderId};
+
+                        dataAccess.executeFunction("select public.\"getOrder\"(?)", attributes);
+
+                        cmd.showView(views[indexOfMainView]);
+                        break;
                 }
             } catch (InputMismatchException e) {}
               catch (NoSuchElementException e) {}

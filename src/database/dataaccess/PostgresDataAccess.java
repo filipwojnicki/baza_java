@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import database.provider.Postgres;
 import model.Model;
@@ -146,19 +148,7 @@ public final class PostgresDataAccess implements DataAccess {
 
       for(int i = 0; i < fieldsWithoutIndexField.length; i++) {
         String value = values.get(fieldsWithoutIndexField[i]);
-        int preparedIndex = i + 1;
-
-        if(isInteger(value)) {
-          ps.setInt(preparedIndex, Integer.parseInt(value));
-        } else if(isFloat(value)) {
-          ps.setFloat(i, Float.parseFloat(value));
-        } else if(isDouble(value)) {
-          ps.setDouble(i, Double.parseDouble(value));
-        } else if(isTimestamp(value)) {
-          ps.setTimestamp(preparedIndex, Timestamp.valueOf(value));
-        } else {
-          ps.setString(preparedIndex, value);
-        }
+        prepareStatementValues(ps, value, i);
       }
 
       if(ps.executeUpdate() == 0) {
@@ -209,18 +199,9 @@ public final class PostgresDataAccess implements DataAccess {
     try {
       ps = connection.prepareStatement(query);
 
-      for(int i = 1; i <= fields.length; i++) {
-        String value = values.get(fields[i - 1]);
-        
-        if(isInteger(value)) {
-          ps.setInt(i, Integer.parseInt(value));
-        } else if(isFloat(value)) {
-          ps.setFloat(i, Float.parseFloat(value));
-        } else if(isDouble(value)) {
-          ps.setDouble(i, Double.parseDouble(value));
-        } else {
-          ps.setString(i, value);
-        }
+      for(int i = 0; i < fields.length; i++) {
+        String value = values.get(fields[i]);
+        prepareStatementValues(ps, value, i);
       }
 
       isUpdated = ps.executeUpdate() == 0 ? false : true; 
@@ -262,6 +243,40 @@ public final class PostgresDataAccess implements DataAccess {
     }
   }
 
+  public void executeFunction(String query, String... preparedAttributes) throws SQLException {
+    PreparedStatement ps = null;
+    logger.info(query);
+
+    if (connection == null) {
+      logger.log(Level.WARNING, "Connection not found");
+      return;
+    }
+    
+    try{
+      ps = connection.prepareStatement(query);
+
+      if(preparedAttributes.length > 0) {
+        for(int i = 0; i < preparedAttributes.length; i++) {
+          prepareStatementValues(ps, preparedAttributes[i], i);
+        }
+      }
+
+      ResultSet rs = ps.executeQuery(); 
+
+      while(rs.next()) {
+        String result = rs.getString(getFunctionNameFromString(query));
+        System.out.println(result);
+      }
+
+    } catch (SQLException e) {
+      logger.log(Level.WARNING, "Driver not found. " + e.getMessage(), e);
+    } finally {
+      if(ps != null) {
+        ps.close();
+      }
+    }
+  }
+
   private void openConnection() throws SQLException {
     Postgres connection = new Postgres();
     connection.connect();
@@ -276,9 +291,40 @@ public final class PostgresDataAccess implements DataAccess {
     this.schema = connection.getSchema();
   }
 
+  public void prepareStatementValues(PreparedStatement ps, String value, int index) throws SQLException {
+    int preparedIndex = index + 1;
+
+    try{
+      if(isInteger(value)) {
+        ps.setInt(preparedIndex, Integer.parseInt(value));
+      } else if(isFloat(value)) {
+        ps.setFloat(preparedIndex, Float.parseFloat(value));
+      } else if(isDouble(value)) {
+        ps.setDouble(preparedIndex, Double.parseDouble(value));
+      } else if(isTimestamp(value)) {
+        ps.setTimestamp(preparedIndex, Timestamp.valueOf(value));
+      } else {
+        ps.setString(preparedIndex, value);
+      }
+    } catch (SQLException e) {
+      System.out.println(value + " " + e);
+    }
+  }
+
   public String getModelName(Model model) {
     String modelName = model.getClass().getSimpleName();
     return '"' + modelName.substring(0, 1).toUpperCase() + modelName.substring(1) + '"';
+  }
+
+  public String getFunctionNameFromString(String text) {
+    Pattern p = Pattern.compile("\\w+(?!\\s*\\w+)(?=\\s*\\w*\\((?!\\s*[\\w\\*]+\\s+[\\w\\*]+))");
+    Matcher m = p.matcher(text.replaceAll("\"", ""));
+
+    if (m.find()) {
+      return m.group(0);
+    }
+
+    return "";
   }
 
   private String convertStrArrayToString(String[] arr) {

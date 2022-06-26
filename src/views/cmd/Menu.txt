@@ -14,3 +14,4 @@ Wybierz opcje:
 12. Aktualizuj produkt
 13. Aktualizuj klient
 14. Aktualizuj pozycje
+15. Pokaz kompletne zamowienie
