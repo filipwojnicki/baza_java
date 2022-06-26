@@ -1,0 +1,16 @@
+
+Wybierz opcje:
+1. Pokaz produkty
+2. Pokaz klientow
+3. Pokaz zamowienia
+4. Pokaz pozycje zamowienia
+5. Dodaj klienta
+6. Dodaj produkt
+7. Dodaj zamowienie
+8. Usun produkt
+9. Usun klienta
+10. Usun zamowienie
+11. Usun pozycje
+12. Aktualizuj produkt
+13. Aktualizuj klient
+14. Aktualizuj pozycje

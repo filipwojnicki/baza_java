@@ -13,7 +13,7 @@ public class Zamowienie extends Model {
 
   @Override
   public String toString() {
-    return zamowienie_id + "" + klient_id + ", " + data;
+    return zamowienie_id + ", " + klient_id + ", " + data;
   }
 
   @Override

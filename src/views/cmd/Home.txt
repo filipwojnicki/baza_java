@@ -1,8 +1,0 @@
-
-Wybierz opcje:
-1. Pokaz produkty
-2. Pokaz klientow
-3. Pokaz zamowienia
-4. Pokaz pozycje zamowienia
-5. Dodaj klienta
-6. Dodaj produkt

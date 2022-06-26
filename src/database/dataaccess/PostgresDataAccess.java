@@ -5,8 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +30,9 @@ public final class PostgresDataAccess implements DataAccess {
     this.openConnection();
   }
 
-  public List<Map<String, String>> fetchOne(Model model, String... condition) throws SQLException {
+  public Map<String, String> fetchOne(Model model, String... condition) throws SQLException {
     String conditionTemp = "";
+    Map<String, String> result = new HashMap<String, String>(); 
 
     if(condition.length > 0) {
       conditionTemp = convertStrArrayToString(condition) + " LIMIT 1";
@@ -34,7 +40,13 @@ public final class PostgresDataAccess implements DataAccess {
       conditionTemp = "true LIMIT 1";
     }
 
-    return this.fetchAll(model, conditionTemp);
+    List<Map<String, String>> fetched = this.fetchAll(model, conditionTemp);
+
+    if(fetched.size() > 0) {
+      return fetched.get(0);
+    }
+
+    return result;
   }
 
   public List<Map<String, String>> fetchAll(Model model, String... condition) throws SQLException {
@@ -91,12 +103,12 @@ public final class PostgresDataAccess implements DataAccess {
     return results;
   }
 
-  public void create(Model model) throws SQLException {
+  public int create(Model model) throws SQLException {
     PreparedStatement ps = null;
 
     if (connection == null) {
       logger.log(Level.WARNING, "Connection not found");
-      return;
+      return 0;
     }
 
     String query = "INSERT INTO " + schema + getModelName(model) + "( ";
@@ -130,24 +142,36 @@ public final class PostgresDataAccess implements DataAccess {
     logger.info(model.toString());
 
     try {
-      ps = connection.prepareStatement(query);
+      ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
       for(int i = 0; i < fieldsWithoutIndexField.length; i++) {
-        System.out.println(i);
         String value = values.get(fieldsWithoutIndexField[i]);
         int preparedIndex = i + 1;
+
         if(isInteger(value)) {
           ps.setInt(preparedIndex, Integer.parseInt(value));
+        } else if(isTimestamp(value)) {
+          ps.setTimestamp(preparedIndex, Timestamp.valueOf(value));
         } else {
           ps.setString(preparedIndex, value);
+          // ps.setTimestamp(preparedIndex, value);
         }
       }
 
-      System.out.println(ps.toString());
+      if(ps.executeUpdate() == 0) {
+        throw new SQLException("Data not inserted");
+      }
 
-      ps.executeUpdate();
+      try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+        if (generatedKeys.next()) {
+          return generatedKeys.getInt(1);
+        } else {
+          throw new SQLException("Insert failed, no ID obtained.");
+        }
+      }
     } catch (SQLException e) {
       logger.log(Level.WARNING, "Driver not found. " + e.getMessage(), e);
+      return 0;
     } finally {
       if(ps != null) {
         ps.close();
@@ -184,6 +208,7 @@ public final class PostgresDataAccess implements DataAccess {
 
       for(int i = 1; i <= fields.length; i++) {
         String value = values.get(fields[i - 1]);
+        
         if(isInteger(value)) {
           ps.setInt(i, Integer.parseInt(value));
         } else {
@@ -244,6 +269,11 @@ public final class PostgresDataAccess implements DataAccess {
     this.schema = connection.getSchema();
   }
 
+  public String getModelName(Model model) {
+    String modelName = model.getClass().getSimpleName();
+    return '"' + modelName.substring(0, 1).toUpperCase() + modelName.substring(1) + '"';
+  }
+
   private String convertStrArrayToString(String[] arr) {
     return Arrays.toString(arr).replaceAll("[\\[\\]\\(\\)]", "");
   }
@@ -259,8 +289,18 @@ public final class PostgresDataAccess implements DataAccess {
     return true;
   }
 
-  public String getModelName(Model model) {
-    String modelName = model.getClass().getSimpleName();
-    return '"' + modelName.substring(0, 1).toUpperCase() + modelName.substring(1) + '"';
+  public SimpleDateFormat getSqlTimestampSimpleDateFormat() {
+    return new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  }
+
+  public boolean isTimestamp(String timestamp) {
+    SimpleDateFormat format = getSqlTimestampSimpleDateFormat();
+
+    try {
+      format.parse(timestamp);
+      return true;
+    } catch(ParseException e) {
+      return false;
+    }
   }
 }

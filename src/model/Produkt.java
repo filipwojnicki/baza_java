@@ -15,7 +15,7 @@ public class Produkt extends Model {
 
   @Override
   public String toString() {
-    return produkt_id + "" + nazwa + ", " + opis + ", " + cena + ", " + ilosc;
+    return produkt_id + ", " + nazwa + ", " + opis + ", " + cena + ", " + ilosc;
   }
 
   @Override
