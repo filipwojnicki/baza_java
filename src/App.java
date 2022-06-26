@@ -44,6 +44,8 @@ public class App {
                 switch(menuSelection) {
                     case 1:
                         cmd.clearConsole();
+                        scan.nextLine();
+
                         List<Map<String, String>> products = dataAccess.fetchAll(produkt);
 
                         for(int i = 0; i < products.size(); i++) {
@@ -55,6 +57,8 @@ public class App {
 
                     case 2:
                         cmd.clearConsole();
+                        scan.nextLine();
+
                         List<Map<String, String>> clients = dataAccess.fetchAll(klient);
 
                         for(int i = 0; i < clients.size(); i++) {
@@ -65,6 +69,8 @@ public class App {
 
                     case 3:
                         cmd.clearConsole();
+                        scan.nextLine();
+
                         List<Map<String, String>> orders = dataAccess.fetchAll(zamowienie);
 
                         for(int i = 0; i < orders.size(); i++) {
@@ -75,6 +81,8 @@ public class App {
 
                     case 4:
                         cmd.clearConsole();
+                        scan.nextLine();
+
                         List<Map<String, String>> positions = dataAccess.fetchAll(pozycja);
 
                         for(int i = 0; i < positions.size(); i++) {
@@ -85,19 +93,21 @@ public class App {
 
                     case 5:
                         cmd.clearConsole();
+                        scan.nextLine();
+
                         Klient newClient = new Klient();
                         
                         System.out.println("Imie:");
-                        newClient.imie = scan.next();
+                        newClient.imie = scan.nextLine();
 
                         System.out.println("Nazwisko:");
-                        newClient.nazwisko = scan.next();
+                        newClient.nazwisko = scan.nextLine();
 
                         System.out.println("Adres:");
-                        newClient.adres = scan.next();
+                        newClient.adres = scan.nextLine();
 
                         System.out.println("Telefon:");
-                        newClient.telefon = scan.next();
+                        newClient.telefon = scan.nextLine();
 
                         dataAccess.create(newClient);
 
@@ -106,19 +116,21 @@ public class App {
 
                     case 6:
                         cmd.clearConsole();
+                        scan.nextLine();
+
                         Produkt newProduct = new Produkt();
                         
                         System.out.println("Nazwa:");
-                        newProduct.nazwa = scan.next();
+                        newProduct.nazwa = scan.nextLine();
 
                         System.out.println("Opis:");
-                        newProduct.opis = scan.next();
+                        newProduct.opis = scan.nextLine();
 
                         System.out.println("Cena:");
-                        newProduct.cena = scan.next();
+                        newProduct.cena = scan.nextLine();
 
                         System.out.println("Ilosc:");
-                        newProduct.ilosc = scan.next();
+                        newProduct.ilosc = scan.nextLine();
 
                         dataAccess.create(newProduct);
 
@@ -127,11 +139,12 @@ public class App {
 
                     case 7:
                         cmd.clearConsole();
+                        scan.nextLine();
 
                         Zamowienie order = new Zamowienie();
 
                         System.out.println("Klient id: ");
-                        order.klient_id = scan.next();
+                        order.klient_id = scan.nextLine();
 
                         order.data = String.valueOf(new Timestamp(System.currentTimeMillis()));
 
@@ -148,10 +161,10 @@ public class App {
                         position.zamowienie_id = order.zamowienie_id;
 
                         System.out.println("Produkt id: ");
-                        position.produkt_id = scan.next();
+                        position.produkt_id = scan.nextLine();
 
                         System.out.println("Ilosc: ");
-                        position.ilosc = scan.next();
+                        position.ilosc = scan.nextLine();
 
                         int positionId = dataAccess.create(position);
 
@@ -165,11 +178,12 @@ public class App {
 
                     case 8:
                         cmd.clearConsole();
+                        scan.nextLine();
 
                         Produkt product = new Produkt();
 
                         System.out.println("Produkt id: ");
-                        product.produkt_id = scan.next();
+                        product.produkt_id = scan.nextLine();
 
                         dataAccess.remove(product);
 
@@ -178,11 +192,12 @@ public class App {
                     
                     case 9:
                         cmd.clearConsole();
+                        scan.nextLine();
 
                         Klient client = new Klient();
 
                         System.out.println("Klient id: ");
-                        client.klient_id = scan.next();
+                        client.klient_id = scan.nextLine();
 
                         dataAccess.remove(client);
 
@@ -191,11 +206,12 @@ public class App {
 
                     case 10:
                         cmd.clearConsole();
+                        scan.nextLine();
 
                         Zamowienie orderRemove = new Zamowienie();
 
                         System.out.println("Zamowienie id: ");
-                        orderRemove.zamowienie_id = scan.next();
+                        orderRemove.zamowienie_id = scan.nextLine();
 
                         dataAccess.remove(orderRemove);
 
@@ -204,11 +220,12 @@ public class App {
 
                     case 11:
                         cmd.clearConsole();
+                        scan.nextLine();
 
                         Pozycja positionRemove = new Pozycja();
 
                         System.out.println("Pozycja id: ");
-                        positionRemove.pozycja_id = scan.next();
+                        positionRemove.pozycja_id = scan.nextLine();
 
                         dataAccess.remove(positionRemove);
 
@@ -217,12 +234,13 @@ public class App {
                     
                     case 12:
                         cmd.clearConsole();
+                        scan.nextLine();
 
                         boolean productIsUpdated = false;
                         Produkt productToUpdate = new Produkt();
 
                         System.out.println("Id produktu do zmiany: ");
-                        productToUpdate.produkt_id = scan.next();
+                        productToUpdate.produkt_id = scan.nextLine();
 
                         String productIndexField = productToUpdate.getIndexField();
                         Map<String, String> productUpdateObject = dataAccess.fetchOne(productToUpdate, productIndexField + "=" + productToUpdate.produkt_id);
@@ -258,12 +276,13 @@ public class App {
 
                     case 13:
                         cmd.clearConsole();
+                        scan.nextLine();
 
                         boolean clientIsUpdated = false;
                         Klient clientToUpdate = new Klient();
 
                         System.out.println("Id klient do zmiany: ");
-                        clientToUpdate.klient_id = scan.next();
+                        clientToUpdate.klient_id = scan.nextLine();
 
                         String clientIndexField = clientToUpdate.getIndexField();
                         Map<String, String> clientUpdateObject = dataAccess.fetchOne(clientToUpdate, clientIndexField + "=" + clientToUpdate.klient_id);
@@ -299,12 +318,13 @@ public class App {
 
                     case 14:
                         cmd.clearConsole();
+                        scan.nextLine();
 
                         boolean positionIsUpdated = false;
                         Pozycja positionToUpdate = new Pozycja();
 
                         System.out.println("Id pozycji do zmiany: ");
-                        positionToUpdate.pozycja_id = scan.next();
+                        positionToUpdate.pozycja_id = scan.nextLine();
 
                         String positionIndexField = positionToUpdate.getIndexField();
                         Map<String, String> positionUpdateObject = dataAccess.fetchOne(positionToUpdate, positionIndexField + "=" + positionToUpdate.pozycja_id);
@@ -345,12 +365,15 @@ public class App {
 
     public static boolean setField(Object targetObject, String fieldName, Object fieldValue) {
         Field field;
+
         try {
             field = targetObject.getClass().getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
             field = null;
         }
+
         Class superClass = targetObject.getClass().getSuperclass();
+
         while (field == null && superClass != null) {
             try {
                 field = superClass.getDeclaredField(fieldName);
@@ -358,10 +381,13 @@ public class App {
                 superClass = superClass.getSuperclass();
             }
         }
+
         if (field == null) {
             return false;
         }
+
         field.setAccessible(true);
+
         try {
             field.set(targetObject, fieldValue);
             return true;

@@ -150,11 +150,14 @@ public final class PostgresDataAccess implements DataAccess {
 
         if(isInteger(value)) {
           ps.setInt(preparedIndex, Integer.parseInt(value));
+        } else if(isFloat(value)) {
+          ps.setFloat(i, Float.parseFloat(value));
+        } else if(isDouble(value)) {
+          ps.setDouble(i, Double.parseDouble(value));
         } else if(isTimestamp(value)) {
           ps.setTimestamp(preparedIndex, Timestamp.valueOf(value));
         } else {
           ps.setString(preparedIndex, value);
-          // ps.setTimestamp(preparedIndex, value);
         }
       }
 
@@ -211,6 +214,10 @@ public final class PostgresDataAccess implements DataAccess {
         
         if(isInteger(value)) {
           ps.setInt(i, Integer.parseInt(value));
+        } else if(isFloat(value)) {
+          ps.setFloat(i, Float.parseFloat(value));
+        } else if(isDouble(value)) {
+          ps.setDouble(i, Double.parseDouble(value));
         } else {
           ps.setString(i, value);
         }
@@ -278,20 +285,42 @@ public final class PostgresDataAccess implements DataAccess {
     return Arrays.toString(arr).replaceAll("[\\[\\]\\(\\)]", "");
   }
 
+  public SimpleDateFormat getSqlTimestampSimpleDateFormat() {
+    return new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  }
+
   public static boolean isInteger(String s) {
     try { 
-        Integer.parseInt(s); 
+      Integer.parseInt(s); 
     } catch(NumberFormatException e) { 
-        return false; 
+      return false; 
     } catch(NullPointerException e) {
-        return false;
+      return false;
     }
     return true;
   }
 
-  public SimpleDateFormat getSqlTimestampSimpleDateFormat() {
-    return new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  public static boolean isFloat(String s) {
+    try{
+      Float.parseFloat(s);
+    } catch(NumberFormatException e) { 
+      return false; 
+    } catch(NullPointerException e) {
+      return false;
+    }
+    return true;
   }
+
+  public static boolean isDouble(String str) {
+    try {
+      Double.parseDouble(str);
+    } catch(NumberFormatException e) { 
+      return false; 
+    } catch(NullPointerException e) {
+      return false;
+    }
+    return true;
+}
 
   public boolean isTimestamp(String timestamp) {
     SimpleDateFormat format = getSqlTimestampSimpleDateFormat();
